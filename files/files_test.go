@@ -7,7 +7,7 @@ import (
 
 func TestHostExtractor(t *testing.T) {
 	dir, err := os.Getwd()
-	hosts, err := FileLinesExtractor(dir + "/../host.lst")
+	hosts, err := FileLinesExtractor(dir + "/../hosts_dist.lst")
 	if err != nil {
 		t.Error(err.Error())
 	}
