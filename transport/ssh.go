@@ -40,7 +40,7 @@ func getConfig() *ssh.ClientConfig {
 	config := &ssh.ClientConfig{
 		User: userInfo.Username,
 		Auth: []ssh.AuthMethod{
-			publicKey(userInfo.HomeDir + "/.ssh/id_rsa"),
+			publicKeyAuthBuilder(userInfo.HomeDir + "/.ssh/id_rsa"),
 		},
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
@@ -57,7 +57,7 @@ func getSystemUserInfo() *user.User {
 	return usr
 }
 
-func publicKey(file string) ssh.AuthMethod {
+func publicKeyAuthBuilder(file string) ssh.AuthMethod {
 
 	buffer, err := ioutil.ReadFile(file)
 	if err != nil {
