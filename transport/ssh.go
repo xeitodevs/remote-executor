@@ -13,13 +13,15 @@ func ExecuteCommand(command string, server string, channel chan<- string) {
 
 	conn, err := ssh.Dial("tcp", server, getConfig())
 	if err != nil {
-		log.Fatal("Cannot stablish ssh connection (dial phase)." + err.Error())
+		channel <- "Cannot stablish ssh connection (dial phase)." + err.Error()
+		return
 	}
 	defer conn.Close()
 
 	session, err := conn.NewSession()
 	if err != nil {
-		log.Fatal("Error getting ssh session.")
+		channel <- "Error getting ssh session." + err.Error()
+		return
 	}
 	defer session.Close()
 
