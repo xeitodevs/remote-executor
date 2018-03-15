@@ -2,7 +2,6 @@ package engine
 
 import (
 	"time"
-	"github.com/xeitodevs/remote-executor/transport"
 )
 
 type Command struct {
@@ -10,7 +9,7 @@ type Command struct {
 	Value            string
 	CreatedOn        time.Time
 	ChannelResponse  chan<- string
-	TransportAdapter transport.TransportAdapter
+	TransportAdapter TransportAdapter
 }
 
 func (c *Command) Exec() {
