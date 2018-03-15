@@ -34,7 +34,7 @@ func main() {
 			CreatedOn:        time.Now(),
 			Id:               id,
 			ChannelResponse:  responses,
-			TransportAdapter: ssh.New(host),
+			TransportAdapter: ssh.New(host), // In this case, is SSH , but could be http ...
 		})
 	}
 	commandQueue.Close()

@@ -11,13 +11,6 @@ import (
 	"errors"
 )
 
-type TransportAdapter interface {
-	Connect() error
-	Close()
-	Run(command string) string
-	config() *sshConfiguration
-}
-
 type sshAdapter struct {
 	Configuration *sshConfiguration
 	Client        *SSHClient
@@ -129,6 +122,6 @@ func (s *session) Run(command string) {
 	s.Session.Run(command)
 }
 
-func New(server string) TransportAdapter {
+func New(server string) *sshAdapter {
 	return &sshAdapter{server: server}
 }

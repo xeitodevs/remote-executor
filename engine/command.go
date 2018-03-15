@@ -2,7 +2,7 @@ package engine
 
 import (
 	"time"
-	"github.com/xeitodevs/remote-executor/transport/ssh"
+	"github.com/xeitodevs/remote-executor/transport"
 )
 
 type Command struct {
@@ -10,7 +10,7 @@ type Command struct {
 	Value            string
 	CreatedOn        time.Time
 	ChannelResponse  chan<- string
-	TransportAdapter ssh.TransportAdapter
+	TransportAdapter transport.TransportAdapter
 }
 
 func (c *Command) Exec() {
