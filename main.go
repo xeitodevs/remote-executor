@@ -4,11 +4,10 @@ import (
 	"log"
 	"os"
 	"github.com/xeitodevs/remote-executor/files"
-	"github.com/xeitodevs/remote-executor/transport"
-	"github.com/xeitodevs/remote-executor/transport/command"
 	"fmt"
 	"time"
 	"github.com/xeitodevs/remote-executor/transport/ssh"
+	"github.com/xeitodevs/remote-executor/engine"
 )
 
 const numOfWorkers = 10
@@ -25,17 +24,17 @@ func main() {
 
 	delta := len(hosts)
 	responses := make(chan string)
-	commandQueue := command.NewCommandQueue(delta)
+	commandQueue := engine.NewCommandQueue(delta)
 	for worker := 1; worker <= numOfWorkers; worker++ {
-		go transport.New().Worker(commandQueue)
+		go engine.New().Run(commandQueue)
 	}
 	for id, host := range hosts {
-		commandQueue.Add(&command.Command{
-			Value:           userCommand,
-			CreatedOn:       time.Now(),
-			Id:              id,
-			ChannelResponse: responses,
-			SSHAdapter:      ssh.New(host),
+		commandQueue.Add(&engine.Command{
+			Value:            userCommand,
+			CreatedOn:        time.Now(),
+			Id:               id,
+			ChannelResponse:  responses,
+			TransportAdapter: ssh.New(host),
 		})
 	}
 	commandQueue.Close()

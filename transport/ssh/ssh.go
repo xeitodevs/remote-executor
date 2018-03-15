@@ -11,7 +11,7 @@ import (
 	"errors"
 )
 
-type SSHAdapter interface {
+type TransportAdapter interface {
 	Connect() error
 	Close()
 	Run(command string) string
@@ -34,7 +34,7 @@ func (adapter *sshAdapter) config() *sshConfiguration {
 	hostKeyCallback := func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		return nil
 	}
-	auth := adapter.publicKeyAuthBuilder(userInfo.HomeDir + "/.ssh/golang_rsa")
+	auth := adapter.publicKeyAuthBuilder(userInfo.HomeDir + "/.ssh/id_rsa")
 	authMethods := []ssh.AuthMethod{auth}
 	config := &ssh.ClientConfig{
 		User:            userInfo.Username,
@@ -129,6 +129,6 @@ func (s *session) Run(command string) {
 	s.Session.Run(command)
 }
 
-func New(server string) SSHAdapter {
+func New(server string) TransportAdapter {
 	return &sshAdapter{server: server}
 }
