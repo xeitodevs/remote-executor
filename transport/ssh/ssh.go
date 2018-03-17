@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"log"
 	"golang.org/x/crypto/ssh"
-	"os/user"
 	"bytes"
 	"net"
 	"time"
@@ -16,6 +15,8 @@ type sshAdapter struct {
 	Client        *SSHClient
 	Session       *session
 	server        string
+	privateKey    string
+	user          string
 }
 
 type sshConfiguration struct {
@@ -23,14 +24,13 @@ type sshConfiguration struct {
 }
 
 func (adapter *sshAdapter) config() *sshConfiguration {
-	userInfo := adapter.getSystemUserInfo()
 	hostKeyCallback := func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		return nil
 	}
-	auth := adapter.publicKeyAuthBuilder(userInfo.HomeDir + "/.ssh/id_rsa")
+	auth := adapter.publicKeyAuthBuilder(adapter.privateKey)
 	authMethods := []ssh.AuthMethod{auth}
 	config := &ssh.ClientConfig{
-		User:            userInfo.Username,
+		User:            adapter.user,
 		Auth:            authMethods,
 		HostKeyCallback: hostKeyCallback,
 		Timeout:         time.Second * 1,
@@ -39,13 +39,6 @@ func (adapter *sshAdapter) config() *sshConfiguration {
 	return adapter.Configuration
 }
 
-func (adapter *sshAdapter) getSystemUserInfo() *user.User {
-	usr, err := user.Current()
-	if err != nil {
-		log.Fatal("Cannot gather default system usr.")
-	}
-	return usr
-}
 
 func (adapter *sshAdapter) publicKeyAuthBuilder(file string) ssh.AuthMethod {
 
@@ -122,6 +115,6 @@ func (s *session) Run(command string) {
 	s.Session.Run(command)
 }
 
-func New(server string) *sshAdapter {
-	return &sshAdapter{server: server}
+func New(server string, user string, privateKey string) *sshAdapter {
+	return &sshAdapter{server: server, user: user, privateKey: privateKey}
 }
