@@ -7,12 +7,18 @@ import (
 	"github.com/xeitodevs/remote-executor/transport/ssh"
 	"github.com/xeitodevs/remote-executor/engine"
 	"os"
+	"bufio"
+	"log"
 )
 
 func main() {
 
 	args := input.ParseArgs()
-	hosts := input.GetHosts(os.Stdin)
+	input.StdinChecker(os.Stdin)
+	hosts, err := input.ParseHosts(bufio.NewReader(os.Stdin))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	delta := len(hosts)
 	responses := make(chan string)
