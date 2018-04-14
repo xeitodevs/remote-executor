@@ -1,29 +1,29 @@
 package engine
 
 type Queue interface {
-	Queue() chan *Command
-	Add(command *Command)
+	Queue() chan Task
+	Add(task Task)
 	Close()
 }
 
-type commandQueue struct {
-	commandQueue chan *Command
+type taskQueue struct {
+	taskQueue chan Task
 }
 
-func (q *commandQueue) Queue() chan *Command {
-	return q.commandQueue
+func (q *taskQueue) Queue() chan Task {
+	return q.taskQueue
 }
 
-func (q *commandQueue) Add(command *Command) {
+func (q *taskQueue) Add(command Task) {
 	q.Queue() <- command
 }
 
-func (q *commandQueue) Close() {
-	close(q.commandQueue)
+func (q *taskQueue) Close() {
+	close(q.taskQueue)
 }
 
-func NewCommandQueue(delta int) *commandQueue {
-	return &commandQueue{
-		make(chan *Command, delta),
+func NewCommandQueue(delta uint) *taskQueue {
+	return &taskQueue{
+		make(chan Task, delta),
 	}
 }

@@ -20,7 +20,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	delta := len(hosts)
+	delta := uint(len(hosts))
 	responses := make(chan string)
 	commandQueue := engine.NewCommandQueue(delta)
 	for worker := 1; worker <= args.MaxConcurrency; worker++ {

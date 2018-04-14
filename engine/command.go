@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+type Task interface{
+	Exec()
+}
+
 type Command struct {
 	Id               int
 	Value            string

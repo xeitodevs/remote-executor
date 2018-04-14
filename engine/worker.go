@@ -1,17 +1,16 @@
 package engine
 
-
 type Worker interface {
-	Run(commandsQueue Queue)
+	Run(taskQueue Queue)
 }
 
 type worker struct {
-	commandsQueue <-chan *Command
+	taskQueue <-chan Task
 }
 
-func (_ *worker) Run(commandsQueue Queue) {
-	for nextCommand := range commandsQueue.Queue() {
-		nextCommand.Exec()
+func (_ *worker) Run(taskQueue Queue) {
+	for nextTask := range taskQueue.Queue() {
+		nextTask.Exec()
 	}
 }
 
